@@ -2,7 +2,7 @@
 name: Feature removal
 about: Remove obselete feature
 title: ''
-labels: ''
+labels: remove-feature
 assignees: ''
 
 ---
