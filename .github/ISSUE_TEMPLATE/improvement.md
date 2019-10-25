@@ -1,7 +1,7 @@
 ---
 name: Improvement
 about: Improve an existing feature
-title: ''
+title: "[Improvement] - "
 labels: enhancement
 assignees: ''
 

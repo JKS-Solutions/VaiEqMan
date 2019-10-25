@@ -1,7 +1,7 @@
 ---
 name: New feature
 about: Ask for a new feature to the project
-title: ''
+title: "[New Feature] -"
 labels: enhancement
 assignees: ''
 
