@@ -33,7 +33,6 @@ from src.equipment import models
 from src.auth import models
 from src.auth import views
 
-
 #Logins
 from src.auth.models import User
 from os import urandom
