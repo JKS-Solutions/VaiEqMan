@@ -3,6 +3,13 @@ from src import db
 
 from sqlalchemy.sql import text
 
+product_subcomponent = db.Table(
+    'productsubcomponent',
+    db.Column('ProductSubcomponentId', db.Integer, primary_key=True),
+    db.Column('product_id', db.Integer, db.ForeignKey('product.id')),
+    db.Column('subcomponent_id', db.Integer, db.ForeignKey('product.id'))
+)
+
 
 class Product(db.Model):
     __tablename__ = 'product'
@@ -16,12 +23,31 @@ class Product(db.Model):
                                 nullable=False)
     eol = db.Column(db.Boolean, nullable=False)
 
+    subcomponents = db.relationship(
+        'Product',
+        secondary=product_subcomponent,
+        primaryjoin=(id == product_subcomponent.c.subcomponent_id),
+        secondaryjoin=(id == product_subcomponent.c.product_id),
+        backref=db.backref('products', lazy='dynamic'),
+        lazy='dynamic'
+    )
+
     def __init__(self, name):
         self.name = name
         self.eol = False
 
     def __repr__(self):
         return self.name
+
+    def remove_ref(self, other):
+        self.subcomponents.remove(other)
+
+    def add_ref(self, other):
+        if self.check_subcomponent_status(other):
+            self.subcomponents.append(other)
+
+    def check_subcomponent_status(self, other):
+        return self.subcomponents.filter(product_subcomponent.c.subcomponent_id == other.id).count() > 0
 
     @staticmethod
     def listByBrokenPercent():

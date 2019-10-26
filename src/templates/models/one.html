@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container text-center">
+    <h3>
+        {{ product.name }}
+    </h3>
+</div>
+
+<div>
+    {% for sub in product.subcomponents %}
+    <p>{{sub.name}}</p>
+    {% endfor %}
+</div>
+
+<hr />
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-5">
+            <h4> Subcomponent manufacturers </h4>
+            <table class="table dtable table-striped table-dark ">
+                <thead>
+                    <tr>
+                        <th>Manufacturer</th>
+                        <th>Subcomponents</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for manufacturer in manufacturers %}
+                    <tr>
+                        <td>
+                            <button class="btn btn-link" data-toggle="collapse"
+                                data-target="#collapse-{{ manufacturer.id }}">
+                                <span class="text-light">
+                                    {{ manufacturer.name }}
+                                </span>
+                                <span class="text-light" data-feather="chevron-right"></span>
+                            </button>
+                        </td>
+                        <td>
+                            N/A
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-7">
+            <div class="accordion sticky-top" id="manufAccordion">
+                {% for manufacturer in manufacturers %}
+                <div class="collapse" data-parent="#manufAccordion" id="collapse-{{ manufacturer.id }}">
+                    {% if productsExist %}
+                    <p><span data-feather="plus"></span><a data-toggle="collapse" href="#addProductForm">Add a
+                            product</a></p>
+                    <div class="collapse" id="addProductForm">
+                        <p>
+                            Build product adding logic here
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <h4> Parts availaible by {{ manufacturer.name }} </h4>
+                    <table class="table dtable table-striped table-dark ">
+                        <thead>
+                            <tr>
+                                <th>Product name</th>
+                                <th>State</th>
+                                <th>Part of {{ product.name }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prod in manufacturer.models %}
+                            <tr>
+                                <td>
+                                    {{ prod.name }}
+                                </td>
+                                <td>
+                                    {% if prod.eol %}
+                                    <span style="color: red; font-weight: bold;"> No longer produced</span>
+                                    {% else %}
+                                    <span style="color: green; font-weight: bold;"> In production </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if prod.id in product.subcomponents|map(attribute="id") %}
+                                    <div id="add-{{prod.id}}" style="display: none">
+                                        <button id="addRef/{{prod.id}}" onclick="addRef(this.id, {{prod.id}})"
+                                            style="opacity: 0.4;" class="badge badge-light badge-pill" type="submit"
+                                            value="In production">
+                                            <i style="color: red;" data-feather="x"></i></button>
+                                    </div>
+                                    <div id="remove-{{prod.id}}">
+                                        <button id="removeRef/{{prod.id}}" onclick="removeRef(this.id, {{prod.id}})"
+                                            class="badge badge-light badge-pill" type="submit" value="In production">
+                                            <i style="color: green;" data-feather="check"></i></button>
+                                    </div>
+                                    {% else %}
+                                    <div id="add-{{prod.id}}" >
+                                        <button id="addRef/{{prod.id}}" onclick="addRef(this.id, {{prod.id}})"
+                                            style="opacity: 0.4;" class="badge badge-light badge-pill" type="submit"
+                                            value="In production">
+                                            <i style="color: red;" data-feather="x"></i></button>
+                                    </div>
+                                    <div id="remove-{{prod.id}}" style="display: none">
+                                        <button id="removeRef/{{prod.id}}" onclick="removeRef(this.id, {{prod.id}})"
+                                            class="badge badge-light badge-pill" type="submit" value="In production">
+                                            <i style="color: green;" data-feather="check"></i></button>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script async defer type="text/javascript">
+    $(document).ready(function () {
+        $('.dtable').DataTable({
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": 25,
+            "aaSorting": []
+        });
+    });
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='productadd.js') }}"></script>
+{% endblock %}

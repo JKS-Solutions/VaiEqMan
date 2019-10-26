@@ -37,6 +37,29 @@ def model_setEol(model_id):
     return redirect(url_for("models_index"))
 
 
+@app.route("/models/<model_id>/addRef/<target_id>", methods=["POST"])
+def prodct_addSubcomponent(model_id, target_id):
+    m = Product.query.get(model_id)
+    t = Product.query.get(target_id)
+
+    m.add_ref(t)
+    db.session().commit()
+    return ('', 204)
+
+@app.route("/models/<model_id>/removeRef/<target_id>", methods=["POST"])
+def prodct_removeSubcomponent(model_id, target_id):
+    m = Product.query.get(model_id)
+    t = Product.query.get(target_id)
+
+    m.remove_ref(t)
+    db.session().commit()
+    return ('', 204)
+
+@app.route("/models/<model_id>/", methods=["GET"])
+def get_product(model_id):
+    p = Product.query.get(model_id)
+    return render_template("models/one.html", product = p, manufacturers = Manufacturer.query.all())
+
 @app.route("/models/", methods=["POST"])
 @login_required
 def models_create():
