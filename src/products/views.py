@@ -58,10 +58,7 @@ def prodct_removeSubcomponent(model_id, target_id):
 @app.route("/models/<model_id>/", methods=["GET"])
 def get_product(model_id):
     p = Product.query.get(model_id)
-    subC = []
-    for x in p.subcomponents:
-        subC.append(x)
-    return render_template("models/one.html", product = p, manufacturers = Manufacturer.query.all(), subcomponents = subC)
+    return render_template("models/one.html", product = p, manufacturers = Manufacturer.query.all())
 
 @app.route("/models/", methods=["POST"])
 @login_required
