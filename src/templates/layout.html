@@ -4,7 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>TodoApp</title>
+  <title>EqNet v0.1</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -19,7 +20,7 @@
 <body>
 
   <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark flex-md-nowrap p-0 shadow">
+    <nav class="topnav navbar navbar-expand-lg navbar-dark bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand" href="/">EqNet v0.1 <span data-feather="tool"></span></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
         aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
