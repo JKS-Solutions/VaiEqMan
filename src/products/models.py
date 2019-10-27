@@ -1,6 +1,5 @@
 import os
 from src import db
-from src.classification.models import ClassificationProduct
 
 from sqlalchemy.sql import text
 
@@ -16,13 +15,6 @@ class Product(db.Model):
     manufacturer_id = db.Column(db.Integer, db.ForeignKey('manufacturer.id'),
                                 nullable=False)
     eol = db.Column(db.Boolean, nullable=False)
-
-    classifications = db.relationship(
-        "Classification",
-        secondary=ClassificationProduct,
-        backref=db.backref("Product", lazy='dynamic'),
-        lazy='dynamic'
-    )
 
     def __init__(self, name):
         self.name = name
