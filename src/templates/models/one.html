@@ -11,7 +11,7 @@
         <h6><a style="color:black" data-toggle="collapse" href="#subcomponents"> <span data-feather="plus"></span> View subcomponents ( {{ subcomponents | length }} ) </a></h6>
         <div class="collapse" id="subcomponents">
             <ul style="list-style: none; padding-left: 0;">
-            {% for sub in product.subcomponents %}
+            {% for sub in subcomponents %}
                 <li>
                     <a href="{{ url_for('get_product', model_id = sub.id) }}">{{sub.name}}</a>
                 </li>
