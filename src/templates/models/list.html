@@ -109,7 +109,7 @@
       {% for model in models %}
       <tr>
         <td>
-          {{ model.name }}
+          <a href="{{ url_for('get_product', model_id = model.id) }}">{{model.name}}</a>
         </td>
         <td>
           {{ model.manufacturer.name }}
