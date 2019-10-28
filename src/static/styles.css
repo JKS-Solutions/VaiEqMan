@@ -94,3 +94,9 @@
     color:white;
 }
 
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.4;
+}
+

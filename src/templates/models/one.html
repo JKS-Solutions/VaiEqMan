@@ -6,22 +6,82 @@
         {{ product.name }}
     </h1>
 
-    <hr/>
-    <div>
-        <h6><a style="color:black" data-toggle="collapse" href="#subcomponents"> <span data-feather="plus"></span> View subcomponents ( {{ product.subcomponents.count() }} ) </a></h6>
-        <div class="collapse" id="subcomponents">
-            <ul style="list-style: none; padding-left: 0;">
-            {% for sub in product.subcomponents %}
-                <li>
-                    <a href="{{ url_for('get_product', model_id = sub.id) }}">{{sub.name}}</a>
-                </li>
-            {% endfor %}
-            </ul>
-        </div>
-    </div>
     <hr />
-</div>
+    <div>
+        <h6><a style="color:black" data-toggle="collapse" href="#partIn" class="{% if product.products.count() == 0 %} disabled {% endif %}"> <span data-feather="plus"></span>
+                Used in ( {{ product.products.count() }} )</a></h6>
+        <div class="collapse" id="partIn">
+            <div class="row">
+                <div class="col">
+                    <h4> Used in</h4>
+                    <table class="table dtable table-striped table-dark ">
+                        <thead>
+                            <tr>
+                                <th>Manufacturer</th>
+                                <th>Product</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prod in product.products %}
+                            <tr>
+                                <td>
 
+                                    <span>
+                                        {{ prod.manufacturer.name }}
+                                    </span>
+                                    <span data-feather="chevron-right"></span>
+                                </td>
+                                <td>
+                                    <span class="text-light">
+                                        <a href="{{ url_for('get_product', model_id = prod.id) }}">{{ prod.name }}</a>
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <h6><a style="color:black" data-toggle="collapse" href="#subcomponents" class="{% if product.subcomponents.count() == 0 %} disabled {% endif %}"> <span data-feather="plus"></span> View
+                parts ( {{ product.subcomponents.count() }} ) </a></h6>
+        <div class="collapse" id="subcomponents">
+            <div class="row">
+                <div class="col">
+                    <h4> Uses</h4>
+                    <table class="table dtable table-striped table-dark ">
+                        <thead>
+                            <tr>
+                                <th>Manufacturer</th>
+                                <th>Product</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prod in product.subcomponents %}
+                            <tr>
+                                <td>
+
+                                    <span>
+                                        {{ prod.manufacturer.name }}
+                                    </span>
+                                    <span data-feather="chevron-right"></span>
+                                </td>
+                                <td>
+                                    <span class="text-light">
+                                        <a href="{{ url_for('get_product', model_id = prod.id) }}">{{ prod.name }}</a>
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>
 
 <div class="container">
 
@@ -60,8 +120,8 @@
             <div class="accordion sticky-top" id="manufAccordion">
                 {% for manufacturer in manufacturers %}
                 <div class="collapse" data-parent="#manufAccordion" id="collapse-{{ manufacturer.id }}">
-                   
-                    <h4> Parts availaible by {{ manufacturer.name }} </h4>
+
+                    <h4> Parts available by {{ manufacturer.name }} </h4>
                     <table class="table dtable table-striped table-dark ">
                         <thead>
                             <tr>
@@ -72,7 +132,7 @@
                         </thead>
                         <tbody>
                             {% for prod in manufacturer.models %}
-                            
+
                             <tr>
                                 <td>
                                     <a href="{{ url_for('get_product', model_id = prod.id) }}">{{ prod.name }}</a>
@@ -84,41 +144,44 @@
                                     <span style="color: green; font-weight: bold;"> In production </span>
                                     {% endif %}
                                 </td>
-                               
+
                                 <td class="text-center">
                                     {% if not product.check_subcomponent_status(prod) %}
                                     <div>
-                                        <button  style="opacity: 0.4;" class="btn  btn-sm badge-light badge-pill disabled">
-                                             <i style="color: red;" data-feather="lock"></i>    
+                                        <button style="opacity: 0.4;"
+                                            class="btn  btn-sm badge-light badge-pill disabled">
+                                            <i style="color: red;" data-feather="lock"></i>
                                         </button>
                                     </div>
                                     {% elif prod.id in product.subcomponents|map(attribute="id") %}
                                     <div id="add-{{prod.id}}" style="display: none">
                                         <button id="addRef/{{prod.id}}" onclick="addRef(this.id, {{prod.id}})"
-                                            style="opacity: 0.4;" class="btn btn-sm badge-light badge-pill" type="submit"
-                                            value="In production">
+                                            style="opacity: 0.4;" class="btn btn-sm badge-light badge-pill"
+                                            type="submit" value="In production">
                                             <i style="color: red;" data-feather="x"></i></button>
                                     </div>
                                     <div id="remove-{{prod.id}}">
                                         <button id="removeRef/{{prod.id}}" onclick="removeRef(this.id, {{prod.id}})"
-                                            class="btn btn-sm badge-light badge-pill" type="submit" value="In production">
+                                            class="btn btn-sm badge-light badge-pill" type="submit"
+                                            value="In production">
                                             <i style="color: green;" data-feather="check"></i></button>
                                     </div>
                                     {% else %}
-                                    <div id="add-{{prod.id}}" >
+                                    <div id="add-{{prod.id}}">
                                         <button id="addRef/{{prod.id}}" onclick="addRef(this.id, {{prod.id}})"
-                                            style="opacity: 0.4;" class="btn btn-sm badge-light badge-pill" type="submit"
-                                            value="In production">
+                                            style="opacity: 0.4;" class="btn btn-sm badge-light badge-pill"
+                                            type="submit" value="In production">
                                             <i style="color: red;" data-feather="x"></i></button>
                                     </div>
                                     <div id="remove-{{prod.id}}" style="display: none">
                                         <button id="removeRef/{{prod.id}}" onclick="removeRef(this.id, {{prod.id}})"
-                                            class="btn btn-sm badge-light badge-pill" type="submit" value="In production">
+                                            class="btn btn-sm badge-light badge-pill" type="submit"
+                                            value="In production">
                                             <i style="color: green;" data-feather="check"></i></button>
                                     </div>
                                     {% endif %}
                                 </td>
-                                
+
                             </tr>
                             {% endfor %}
                         </tbody>
