@@ -4,9 +4,10 @@
 .topnav {
   overflow: hidden;
   background-color: #e9e9e9;
+  margin-bottom: 1rem;
 }
 
-.even{
+.even {
   background-color:inherit !important;
 }
 
@@ -84,3 +85,18 @@
     border: 1px solid #ccc;
   }
 }
+
+.table a {
+    color:white
+}
+
+.table a:hover {
+    color:white;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.4;
+}
+
