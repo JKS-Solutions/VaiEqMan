@@ -157,40 +157,42 @@
                                 </td>
 
                                 <td class="text-center">
-                                    {% if not product.check_subcomponent_status(prod) %}
-                                    <div>
+                                    <div id="lock-{{prod.id}}">
                                         <button style="opacity: 0.4;"
                                             class="btn  btn-sm badge-light badge-pill disabled">
                                             <i style="color: red;" data-feather="lock"></i>
                                         </button>
                                     </div>
-                                    {% elif prod.id in product.subcomponents|map(attribute="id") %}
-                                    <div id="add-{{prod.id}}" style="display: none">
-                                        <button id="addRef/{{prod.id}}" onclick="addRef(this.id, {{prod.id}})"
-                                            style="opacity: 0.4;" class="btn btn-sm badge-light badge-pill"
-                                            type="submit" value="In production">
-                                            <i style="color: red;" data-feather="x"></i></button>
+                                    <div class="checkAllows" id="checkAllowed-{{prod.id}}">
+                                        {% if prod.id in product.subcomponents|map(attribute="id") %}
+                                        <div id="add-{{prod.id}}" style="display: none">
+                                            <button id="addRef/{{prod.id}}" onclick="addRef(this.id, {{prod.id}})"
+                                                style="opacity: 0.4;" class="btn btn-sm badge-light badge-pill"
+                                                type="submit" value="In production">
+                                                <i style="color: red;" data-feather="x"></i></button>
+                                        </div>
+                                        <div id="remove-{{prod.id}}">
+                                            <button id="removeRef/{{prod.id}}" onclick="removeRef(this.id, {{prod.id}})"
+                                                class="btn btn-sm badge-light badge-pill" type="submit"
+                                                value="In production">
+                                                <i style="color: green;" data-feather="check"></i></button>
+                                        </div>
+                                        {% else %}
+                                        <div id="add-{{prod.id}}">
+                                            <button id="addRef/{{prod.id}}" onclick="addRef(this.id, {{prod.id}})"
+                                                style="opacity: 0.4;" class="btn btn-sm badge-light badge-pill"
+                                                type="submit" value="In production">
+                                                <i style="color: red;" data-feather="x"></i></button>
+                                        </div>
+                                        <div id="remove-{{prod.id}}" style="display: none">
+                                            <button id="removeRef/{{prod.id}}" onclick="removeRef(this.id, {{prod.id}})"
+                                                class="btn btn-sm badge-light badge-pill" type="submit"
+                                                value="In production">
+                                                <i style="color: green;" data-feather="check"></i></button>
+                                        </div>
+
+                                        {% endif %}
                                     </div>
-                                    <div id="remove-{{prod.id}}">
-                                        <button id="removeRef/{{prod.id}}" onclick="removeRef(this.id, {{prod.id}})"
-                                            class="btn btn-sm badge-light badge-pill" type="submit"
-                                            value="In production">
-                                            <i style="color: green;" data-feather="check"></i></button>
-                                    </div>
-                                    {% else %}
-                                    <div id="add-{{prod.id}}">
-                                        <button id="addRef/{{prod.id}}" onclick="addRef(this.id, {{prod.id}})"
-                                            style="opacity: 0.4;" class="btn btn-sm badge-light badge-pill"
-                                            type="submit" value="In production">
-                                            <i style="color: red;" data-feather="x"></i></button>
-                                    </div>
-                                    <div id="remove-{{prod.id}}" style="display: none">
-                                        <button id="removeRef/{{prod.id}}" onclick="removeRef(this.id, {{prod.id}})"
-                                            class="btn btn-sm badge-light badge-pill" type="submit"
-                                            value="In production">
-                                            <i style="color: green;" data-feather="check"></i></button>
-                                    </div>
-                                    {% endif %}
                                 </td>
 
                             </tr>
@@ -220,4 +222,5 @@
     });
 </script>
 <script type="text/javascript" src="{{ url_for('static', filename='productadd.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='checkIsAllowed.js') }}"></script>
 {% endblock %}

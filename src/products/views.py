@@ -1,6 +1,6 @@
 from src import app, db
 
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, request, url_for, jsonify
 from flask_login import login_required
 
 from src.manufacturers.models import Manufacturer
@@ -76,3 +76,18 @@ def models_create():
     db.session().commit()
 
     return redirect(url_for("models_index"))
+
+@app.route("/models/<self_id>/checkAllowed-<other_id>", methods=["POST"])
+def goNuts(self_id, other_id):
+    p = Product.query.get(self_id)
+    p2 = Product.query.get(other_id)
+    
+    if p is p2:
+        result = {'success' : 'Not allowed'}
+        return jsonify(result), 203
+    
+    if not p.check_subcomponent_status(p2):
+        result = {'success' : 'Not allowed'}
+        return jsonify(result), 203
+    result = {'success' : 'Allowed'}
+    return jsonify(result), 203
