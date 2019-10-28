@@ -91,7 +91,7 @@
     <div class="row">
         <div class="col-5">
             <h4> Subcomponent manufacturers </h4>
-            <table class="table dtable table-striped table-dark ">
+            <table class="table dtable2 table-striped table-dark ">
                 <thead>
                     <tr>
                         <th>Manufacturer</th>
@@ -218,6 +218,15 @@
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             "pageLength": 25,
             "aaSorting": []
+        });
+    });
+</script>
+<script async defer type="text/javascript">
+    $(document).ready(function () {
+        $('.dtable2').DataTable({
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": 25,
+            "order": [[ 1, "desc" ]]
         });
     });
 </script>
