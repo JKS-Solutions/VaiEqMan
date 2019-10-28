@@ -83,14 +83,15 @@ class Product(db.Model):
                 {"id": row[0], "name": row[1], "brokenAvg": round(row[2], 3)})
         return response
 
-    def isAllowed(self, node):
+    def isAllowed(self, node):        
         children = [node]
         parents = [self]
         visited = []
 
         while parents:
             parent = parents.pop(0)
-            visited.append(parent.id)
+            if not parent.id in visited:
+                visited.append(parent.id)
             for p in parent.products:
                 parents.append(p)
 
