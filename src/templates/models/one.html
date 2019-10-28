@@ -8,7 +8,8 @@
 
     <hr />
     <div>
-        <h6><a style="color:black" data-toggle="collapse" href="#partIn" class="{% if product.products.count() == 0 %} disabled {% endif %}"> <span data-feather="plus"></span>
+        <h6><a style="color:black" data-toggle="collapse" href="#partIn"
+                class="{% if product.products.count() == 0 %} disabled {% endif %}"> <span data-feather="plus"></span>
                 Used in ( {{ product.products.count() }} )</a></h6>
         <div class="collapse" id="partIn">
             <div class="row">
@@ -44,7 +45,9 @@
             </div>
         </div>
         <hr />
-        <h6><a style="color:black" data-toggle="collapse" href="#subcomponents" class="{% if product.subcomponents.count() == 0 %} disabled {% endif %}"> <span data-feather="plus"></span> View
+        <h6><a style="color:black" data-toggle="collapse" href="#subcomponents"
+                class="{% if product.subcomponents.count() == 0 %} disabled {% endif %}"> <span
+                    data-feather="plus"></span> View
                 parts ( {{ product.subcomponents.count() }} ) </a></h6>
         <div class="collapse" id="subcomponents">
             <div class="row">
@@ -108,7 +111,15 @@
                             </button>
                         </td>
                         <td>
-                            N/A
+                            {% if manufacturer.id in counts | map(attribute="id") %}
+                            {% for x in counts %}
+                            {% if x.id == manufacturer.id %}
+                            {{x.count}}
+                            {% endif %}
+                            {% endfor %}
+                            {% else %}
+                            0
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

@@ -48,9 +48,9 @@ class Product(db.Model):
 
     def check_subcomponent_status(self, other):
         if self.id is other.id:
-            return False  
+            return False
         return self.isAllowed(other)
-                  
+
     @staticmethod
     def listByBrokenPercent():
         on_heroku = False
@@ -83,24 +83,38 @@ class Product(db.Model):
                 {"id": row[0], "name": row[1], "brokenAvg": round(row[2], 3)})
         return response
 
-    
     def isAllowed(self, node):
         children = [node]
         parents = [self]
         visited = []
-        
+
         while parents:
             parent = parents.pop(0)
             visited.append(parent.id)
-            for p in parent.products:               
+            for p in parent.products:
                 parents.append(p)
-                
+
         while children:
             child = children.pop(0)
             for c in child.subcomponents:
                 if(c.id in visited):
                     return False
                 children.append(c)
-        
+
         return True
 
+    def listByPartCount(self):        
+        stmt = text(
+            "SELECT manufacturer.id, manufacturer.name, COUNT(product.id) FROM productsubcomponent "
+            "LEFT JOIN product on product.id = product_id AND subcomponent_id = " + str(self.id) + " " 
+            "LEFT JOIN manufacturer ON product.manufacturer_id = manufacturer.id "
+            "GROUP BY manufacturer_id "
+        )
+        
+        res = db.engine.execute(stmt)
+
+        response = []
+        for row in res:
+            response.append(
+                {"id": row[0], "name": row[1], "count": row[2]})
+        return response
