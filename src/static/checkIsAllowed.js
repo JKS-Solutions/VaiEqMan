@@ -1,14 +1,15 @@
 $(document).ready(function () {
-    $('.checkAllows').each(function () {
-        var idd = this.id.split("checkAllowed-")[1]
-        $.post(this.id, function (response) {
-            if (response.success == "Not allowed") {
-                $("#checkAllowed-" + idd).remove();
+    $.post( window.location.href + 'checkAllowed', function (response) {
+        for( x = 0; x < response.length; x++){
+            if (response[x].success == "Not allowed") {
+                $("#checkAllowed-" + response[x].id).remove();
             } else {
-                $("#lock-" + idd).remove();
+                $("#lock-" + response[x].id).remove();
             }
-        });
+        }
+        
     });
+
 });
 
 

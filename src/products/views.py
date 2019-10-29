@@ -7,6 +7,7 @@ from src.manufacturers.models import Manufacturer
 from src.products.models import Product
 from src.products.forms import ModelForm
 
+import json
 
 @app.route("/models", methods=["GET"])
 def models_index():
@@ -46,6 +47,7 @@ def prodct_addSubcomponent(model_id, target_id):
     db.session().commit()
     return ('', 204)
 
+
 @app.route("/models/<model_id>/removeRef/<target_id>", methods=["POST"])
 def prodct_removeSubcomponent(model_id, target_id):
     m = Product.query.get(model_id)
@@ -55,10 +57,12 @@ def prodct_removeSubcomponent(model_id, target_id):
     db.session().commit()
     return ('', 204)
 
+
 @app.route("/models/<model_id>/", methods=["GET"])
 def get_product(model_id):
     p = Product.query.get(model_id)
     return render_template("models/one.html", product = p, manufacturers = Manufacturer.query.all(), counts=p.listByPartCount())
+
 
 @app.route("/models/", methods=["POST"])
 @login_required
@@ -77,17 +81,21 @@ def models_create():
 
     return redirect(url_for("models_index"))
 
-@app.route("/models/<self_id>/checkAllowed-<other_id>", methods=["POST"])
-def goNuts(self_id, other_id):
+
+@app.route("/models/<self_id>/checkAllowed", methods=["POST"])
+def goNuts(self_id):
     p = Product.query.get(self_id)
-    p2 = Product.query.get(other_id)
+    p2 = Product.query.all()
+    parents = p.getParents()
+    results = []
+
+    for c in p2:
+        if p.isAllowed(c,parents):
+            res = {'id': c.id,'success' : 'Allowed'}
+            results.append(res)
     
-    if p is p2:
-        result = {'success' : 'Not allowed'}
-        return jsonify(result), 203
-    
-    if not p.check_subcomponent_status(p2):
-        result = {'success' : 'Not allowed'}
-        return jsonify(result), 203
-    result = {'success' : 'Allowed'}
-    return jsonify(result), 203
+        else:
+            res = {'id': c.id,'success' : 'Not allowed'}
+            results.append(res)
+      
+    return jsonify(results), 203

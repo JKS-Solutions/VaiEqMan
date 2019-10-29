@@ -43,13 +43,10 @@ class Product(db.Model):
         self.subcomponents.remove(other)
 
     def add_ref(self, other):
-        if self.check_subcomponent_status(other):
-            self.subcomponents.append(other)
+        parents = self.getParents()
 
-    def check_subcomponent_status(self, other):
-        if self.id is other.id:
-            return False
-        return self.isAllowed(other)
+        if self.isAllowed(other,parents):
+            self.subcomponents.append(other)
 
     @staticmethod
     def listByBrokenPercent():
@@ -83,18 +80,11 @@ class Product(db.Model):
                 {"id": row[0], "name": row[1], "brokenAvg": round(row[2], 3)})
         return response
 
-    def isAllowed(self, node):        
+    def isAllowed(self,node, parents):        
         children = [node]
-        parents = [self]
-        visited = []
-
-        while parents:
-            parent = parents.pop(0)
-            if not parent.id in visited:
-                visited.append(parent.id)
-            for p in parent.products:
-                parents.append(p)
-
+        visited = parents
+        if self is node:
+            return False
         while children:
             child = children.pop(0)
             for c in child.subcomponents:
@@ -119,3 +109,16 @@ class Product(db.Model):
             response.append(
                 {"id": row[0], "name": row[1], "count": row[2]})
         return response
+
+    def getParents(self):
+        parents = [self]
+        visited = []
+
+        while parents:
+            parent = parents.pop(0)
+            if not parent.id in visited:
+                visited.append(parent.id)
+            for p in parent.products:
+                parents.append(p)
+        
+        return visited
